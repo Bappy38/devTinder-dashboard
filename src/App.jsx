@@ -1,7 +1,10 @@
+import NavBar from "./components/NavBar";
+
 function App() {
   return (
     <>
-      <h1>DevTinder Dashboard</h1>
+      <NavBar/>
+      <h1 className="font-extrabold underline">DevTinder Dashboard</h1>
     </>
   )
 }
