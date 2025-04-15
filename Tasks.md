@@ -10,3 +10,7 @@
 - Install axios
 - Install `cors` and use middleware with `origin` and `credentials` configuration in backend
 - Whenever you're making API call through axios, pass `{withCredentials: true}`
+- Install `redux-toolkit` and `react-redux`
+- Configure store and create a slice to store user information
+- Install `Redux DevTool` extension on chrome to investigate redux store
+- 
