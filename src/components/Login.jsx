@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
+import { ENDPOINTS } from "../constants/endpoints";
 
 const Login = () => {
     const [ email, setEmail ] = useState("");
@@ -15,7 +16,7 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const response = await axios.post("http://localhost:3000/auth/signin",
+            const response = await axios.post(ENDPOINTS.LOGIN,
             {
                 email,
                 password
