@@ -1,9 +1,13 @@
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUser } from "../store/userSlice";
 
 const Login = () => {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+
+    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,7 +21,7 @@ const Login = () => {
             {
                 withCredentials: true
             });
-            console.log(response.data);
+            dispatch(addUser(response.data.data));
         } catch (err) {
             console.error(err);
         }
@@ -56,7 +60,7 @@ const Login = () => {
                                     onChange={(e) => setPassword(e.target.value)} 
                                     type="password" 
                                     required 
-                                    placeholder="Password" 
+                                    placeholder="Password"
                                     minlength="8" 
                                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                                     title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" 
