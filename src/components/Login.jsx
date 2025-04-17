@@ -8,6 +8,7 @@ import { ENDPOINTS } from "../constants/endpoints";
 const Login = () => {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ error, setError ] = useState("");
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ const Login = () => {
             navigate("/");
         } catch (err) {
             console.error(err);
+            setError(err.response.data.error);
         }
     }
 
@@ -58,7 +60,7 @@ const Login = () => {
                         </div>
 
                         <div className="mt-4">
-                            <label class="input validator">
+                            <label className="input validator">
                                 <input
                                     value={password} 
                                     onChange={(e) => setPassword(e.target.value)} 
@@ -70,7 +72,7 @@ const Login = () => {
                                     title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" 
                                 />
                             </label>
-                            <p class="validator-hint hidden">
+                            <p className="validator-hint hidden">
                             Must be more than 8 characters, including
                             <br/>⬩ At least one number
                             <br/>⬩ At least one lowercase letter
@@ -79,7 +81,10 @@ const Login = () => {
                         </div>
 
                     
-                        <div className="mt-6 flex justify-center">
+                        {error && (
+                            <p className="mt-3 text-red-600">Error : {error}</p>
+                        )}
+                        <div className="mt-4 flex justify-center">
                             <button
                                 type="submit"
                                 className="btn btn-primary w-[60%]"

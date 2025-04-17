@@ -14,3 +14,4 @@
 - Configure store and create a slice to store user information
 - Install `Redux DevTool` extension on chrome to investigate redux store
 - Fix navigation issues from navbar. Also, ensure that user data persist in the store even after refresh. And always redirect to `login` page if the user is not logged in.
+- Implement logout functionality
