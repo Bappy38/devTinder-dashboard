@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { NOTIFICATION_TYPE } from '../constants/notificationType';
 import { ENDPOINTS } from '../constants/endpoints';
 import { formatDateForInput } from '../helpers/dateTimeHelper';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../store/userSlice';
 
 const EditProfile = ({user}) => {
 
     const [userData, setUserData] = useState(user);
-    console.log(userData);
+    const dispatch = useDispatch();
 
     const handleUpdateProfile = async () => {
       try {
@@ -24,7 +26,7 @@ const EditProfile = ({user}) => {
                 withCredentials: true
             }
         );
-        console.log(response);
+        dispatch(addUser(response.data.data));
         window.showNotification(crypto.randomUUID(), 'Profile Updated Successfully', NOTIFICATION_TYPE.SUCCESS);
       } catch (err) {
         console.error(err);
