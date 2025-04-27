@@ -17,6 +17,7 @@ const EditProfile = ({user}) => {
             {
                 firstName: userData?.firstName,
                 lastName: userData?.lastName,
+                about: userData?.about,
                 dateOfBirth: userData?.dateOfBirth,
                 gender: userData?.gender,
                 photoUrl: userData?.photoUrl,
@@ -92,6 +93,10 @@ const EditProfile = ({user}) => {
                     })}
                   />
                 </fieldset>
+
+                <div className="card-actions mt-2">
+                  <button className="btn btn-primary" onClick={handleUpdateProfile}>Update Profile</button>
+                </div>
               </div>
 
               <div className='w-[50%]'>
@@ -123,11 +128,22 @@ const EditProfile = ({user}) => {
                   />
                 </fieldset>
 
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">About</legend>
+                  <textarea
+                    className="textarea"
+                    placeholder="About"
+                    value={userData?.about}
+                    onChange={(e) => setUserData({
+                      ...userData,
+                      about: e.target.value
+                    })}
+                  ></textarea>
+                </fieldset>
+
               </div>
             </div>
-            <div className="card-actions mt-2">
-              <button className="btn btn-primary" onClick={handleUpdateProfile}>Update Profile</button>
-            </div>
+            
           </div>
         </div>
       </div>
