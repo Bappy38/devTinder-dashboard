@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 const NotificationBar = ({ id, message, type="info", autoDismiss = true, dismissTimeout = 3000 }) => {
 
     const [isVisible, setIsVisible] = useState(false);
+    const [shouldRender, setShouldRender] = useState(false);
 
     useEffect(() => {
 
@@ -10,18 +11,39 @@ const NotificationBar = ({ id, message, type="info", autoDismiss = true, dismiss
             return;
         }
 
-        setIsVisible(true);
+        setShouldRender(true);
+
+        const appearTimer = setTimeout(() => {
+            setIsVisible(true);
+        }, 100);
 
         if (!autoDismiss) {
             return;
         }
 
-        const timer = setTimeout(() => {
-            setIsVisible(false);
-        }, dismissTimeout);
+        if (autoDismiss) {
+          const dismissTimer = setTimeout(() => {
+              setIsVisible(false);
+          }, dismissTimeout);
 
-        return () => clearTimeout(timer);
+          return () => {
+            clearTimeout(appearTimer);
+            clearTimeout(dismissTimer);
+          };
+        }
+
+        return () => clearTimeout(appearTimer);
     }, [id, message, autoDismiss, dismissTimeout]);
+
+    useEffect(() => {
+      if (!isVisible && shouldRender) {
+          const timer = setTimeout(() => {
+              setShouldRender(false);
+          }, 500);
+
+          return () => clearTimeout(timer);
+      }
+    }, [isVisible, shouldRender]);
 
     const getColorClass = () => {
         switch (type) {
@@ -40,13 +62,15 @@ const NotificationBar = ({ id, message, type="info", autoDismiss = true, dismiss
         setIsVisible(false);
     };
 
-    if (!isVisible || !message) return null;
+    if (!shouldRender || !message) return null;
 
     return (
         <div
           className={`
             notification-bar fixed top-4 right-4 shadow-md p-4 rounded-lg flex items-center 
             space-x-4 border
+            transition-all duration-500 ease-in-out
+            ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}
             ${getColorClass()}`}
         >
           <div className="flex-grow">
