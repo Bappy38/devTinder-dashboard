@@ -5,6 +5,7 @@ export const ENDPOINTS = {
     LOGOUT: API_BASE_URL + '/auth/logout',
     
     GET_PROFILE: API_BASE_URL + '/profile/view',
+    UPDATE_PROFILE: API_BASE_URL + '/profile/edit',
 
     GET_FEED: API_BASE_URL + '/user/feed',
 };
