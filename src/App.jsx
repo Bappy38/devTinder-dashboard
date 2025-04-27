@@ -3,11 +3,20 @@ import Profile from "./components/Profile";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Body from "./components/Body";
+import NotificationBar from "./components/NotificationBar"
 import { Provider } from "react-redux";
 import appStore from "./store/appStore";
 import Feed from "./components/Feed";
+import { NOTIFICATION_TYPE } from "./constants/notificationType";
+import { useState } from "react";
 
 function App() {
+  const [notification, setNotification] = useState(null);
+
+  window.showNotification = (id, message, type = NOTIFICATION_TYPE.INFO) => {
+    setNotification({ id, message, type });
+  };
+
   return (
     <>
       <Provider store={appStore}>
@@ -21,6 +30,15 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+
+        {
+          notification && (
+            <NotificationBar
+              id={notification.id}
+              message={notification.message}
+              type={notification.type}/>
+          )
+        }
       </Provider>
     </>
   )
