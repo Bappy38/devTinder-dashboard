@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ENDPOINTS } from "../constants/endpoints";
 
 const Login = () => {
@@ -41,61 +41,71 @@ const Login = () => {
     };
 
     return (
-        <div className="flex justify-center mt-20">
-
-            <div className="card w-96 bg-base-100 shadow-sm">
-                <div className="card-body">
-                    <form onSubmit={handleLogin}>
-                        <div>
-                            <label className="input validator">
-                                <input 
-                                    value={email} 
-                                    onChange={(e) => setEmail(e.target.value)} 
-                                    type="email" 
-                                    placeholder="Enter your email" 
-                                    required
-                                />
-                            </label>
-                            <div className="validator-hint hidden">Enter valid email address</div>
-                        </div>
-
-                        <div className="mt-4">
-                            <label className="input validator">
-                                <input
-                                    value={password} 
-                                    onChange={(e) => setPassword(e.target.value)} 
-                                    type="password" 
-                                    required 
-                                    placeholder="Password"
-                                    minlength="8" 
-                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
-                                    title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" 
-                                />
-                            </label>
-                            <p className="validator-hint hidden">
-                            Must be more than 8 characters, including
-                            <br/>⬩ At least one number
-                            <br/>⬩ At least one lowercase letter
-                            <br/>⬩ At least one uppercase letter
-                            </p>
-                        </div>
-
-                    
-                        {error && (
-                            <p className="mt-3 text-red-600">Error : {error}</p>
-                        )}
-                        <div className="mt-4 flex justify-center">
-                            <button
-                                type="submit"
-                                className="btn btn-primary w-[60%]"
-                                disabled={!isFormValid()}
-                            >Login</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div className="flex justify-center items-center mt-20">
+          <div className="card w-96 bg-white shadow-md p-6">
+            <h2 className="text-2xl font-semibold text-center mb-6">Welcome back 👋</h2>
+    
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="input validator">
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    placeholder="Email address"
+                    required
+                    className="w-full"
+                  />
+                </label>
+                <div className="validator-hint hidden">Enter a valid email address</div>
+              </div>
+    
+              <div>
+                <label className="input validator">
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    placeholder="Password"
+                    required
+                    minLength="8"
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                    title="Must be at least 8 characters with 1 number, 1 lowercase, and 1 uppercase letter"
+                    className="w-full"
+                  />
+                </label>
+                <p className="validator-hint hidden text-xs text-gray-500 mt-1">
+                  Must be at least 8 characters, including:
+                  <br />⬩ One number
+                  <br />⬩ One lowercase letter
+                  <br />⬩ One uppercase letter
+                </p>
+              </div>
+    
+              {error && (
+                <p className="text-sm text-red-600 text-center mt-2">Error: {error}</p>
+              )}
+    
+              <div className="flex justify-center mt-4">
+                <button
+                    type="submit"
+                    className="btn btn-primary w-40"
+                    disabled={!isFormValid()}
+                >
+                    Login
+                </button>
+              </div>
+    
+              <div className="text-center text-sm text-gray-600 mt-4">
+                Don't have an account?{" "}
+                <Link to="/signup" className="text-blue-500 hover:underline">
+                  Sign Up
+                </Link>
+              </div>
+            </form>
+          </div>
         </div>
-    );
+      );
 };
 
 export default Login;
