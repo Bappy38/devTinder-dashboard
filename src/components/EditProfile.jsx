@@ -67,7 +67,7 @@ const EditProfile = ({user}) => {
                   <legend className="fieldset-legend">Gender</legend>
                   <select
                     className="select"
-                    value={userData?.gender}
+                    value={userData?.gender ?? ""}
                     onChange={(e) => setUserData({
                         ...userData,
                         gender: e.target.value
