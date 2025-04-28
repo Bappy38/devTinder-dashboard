@@ -18,3 +18,6 @@
 - Build the UserCard
 - Implement EditProile Component
 - Implement Toast Notification
+- Implement Connections component to show existing connections
+- Implement Requests component to show all the connection requests
+- Implement SignUp component

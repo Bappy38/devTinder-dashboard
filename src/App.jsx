@@ -9,6 +9,7 @@ import appStore from "./store/appStore";
 import Feed from "./components/Feed";
 import { NOTIFICATION_TYPE } from "./constants/notificationType";
 import { useState } from "react";
+import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
               <Route path="profile" element={<Profile/>} />
               <Route path="login" element={<Login/>} />
               <Route path="signup" element={<SignUp/>} />
+              <Route path="connections" element={<Connections/>} />
               <Route path="requests" element={<Requests/>} />
             </Route>
           </Routes>

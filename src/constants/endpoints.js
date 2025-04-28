@@ -9,7 +9,9 @@ export const ENDPOINTS = {
     UPDATE_PROFILE: API_BASE_URL + '/profile/edit',
 
     GET_FEED: API_BASE_URL + '/user/feed',
+    GET_CONNECTIONS: API_BASE_URL + '/user/connection',
     GET_REQUESTS: API_BASE_URL + '/user/request/received',
+
     SEND_REQUEST: (Status, ToUserId) => `${API_BASE_URL}/request/send/${Status}/${ToUserId}`,
     REVIEW_REQUEST: (Status, RequestId) => `${API_BASE_URL}/request/review/${Status}/${RequestId}`
 };
