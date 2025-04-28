@@ -1,36 +1,54 @@
 import axios from "axios";
 import { ENDPOINTS } from "../constants/endpoints";
+import { useDispatch } from "react-redux";
+import { removeUserFromFeed } from "../store/feedSlice";
 
-const UserCard = ({user}) => {
-
+const UserCard = ({ user }) => {
+    const dispatch = useDispatch();
     const { _id, firstName, lastName, about, photoUrl } = user;
 
     const handleAction = async (action) => {
         try {
-            const response = await axios.post(ENDPOINTS.SEND_REQUEST(action, _id), {}, {
-                withCredentials: true
+            await axios.post(ENDPOINTS.SEND_REQUEST(action, _id), {}, {
+                withCredentials: true,
             });
-            console.log(response);
+            dispatch(removeUserFromFeed(user));
         } catch (err) {
             console.error(err);
         }
-    }
+    };
 
     return (
-        <div className="card bg-base-300 w-96 h-[400px] shadow-sm flex">
-            <figure>
+        <div className="card bg-base-300 w-80 md:w-96 h-[460px] shadow-md flex flex-col">
+            <figure className="h-60 w-full overflow-hidden rounded-t-md">
                 <img
                     src={photoUrl}
                     alt="profile photo"
-                    className="mt-2 rounded-md max-w-full max-h-full object-cover"/>
+                    className="w-full h-full object-fill rounded-md"
+                />
             </figure>
-            <div className="card-body">
-                <h2 className="card-title">{firstName} {lastName}</h2>
-                <p>{about}</p>
 
-                <div className="card-actions justify-center mt-2">
-                    <button className="btn btn-primary" onClick={() => handleAction("ignored")}>Ignore</button>
-                    <button className="btn btn-secondary" onClick={() => handleAction("interested")}>Interested</button>
+            <div className="card-body flex flex-col justify-between">
+                <div>
+                    <h2 className="card-title text-center">{firstName} {lastName}</h2>
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+                        {about}
+                    </p>
+                </div>
+
+                <div className="card-actions justify-center mt-4">
+                    <button
+                        className="btn btn-outline btn-primary w-28"
+                        onClick={() => handleAction("ignored")}
+                    >
+                        Ignore
+                    </button>
+                    <button
+                        className="btn btn-primary w-28"
+                        onClick={() => handleAction("interested")}
+                    >
+                        Interested
+                    </button>
                 </div>
             </div>
         </div>

@@ -25,8 +25,27 @@ const Feed = () => {
         }
     }
 
-    if (!users) {
-        return <></>
+    if (!users || users.length === 0) {
+        return (
+            <div className="flex flex-col justify-center items-center mt-20 text-gray-500">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-16 w-16 mb-4 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 16h8m-4-8v8m0 0v2m0-2H8m8 0h-4"
+                    />
+                </svg>
+                <p className="text-lg font-medium">No New Feeds</p>
+                <p className="text-sm mt-1">Come back later to see more people!</p>
+            </div>
+        );
     }
 
     return (
@@ -35,17 +54,6 @@ const Feed = () => {
                 user={users[0]}
             />
         </div>
-        
-        // <div>
-        //     {
-        //         users.map(user => (
-        //             <UserCard
-        //                 key={user._id}
-        //                 user={user}
-        //             />
-        //         ))
-        //     }
-        // </div>
     );
 };
 
