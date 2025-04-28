@@ -25,6 +25,8 @@ const NavBar = () => {
         <div className="navbar bg-base-300 shadow-sm">
             <div className="flex-1">
                 <Link to="/" className="btn btn-ghost text-xl">DevTinder</Link>
+                <Link to="/connections" className="ml-10 btn btn-ghost text-sm">Connections</Link>
+                <Link to="/requests" className="btn btn-ghost text-sm">Requests</Link>
             </div>
             {
                 loggedInUser && (
