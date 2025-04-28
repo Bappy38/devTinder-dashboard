@@ -1,7 +1,20 @@
+import axios from "axios";
+import { ENDPOINTS } from "../constants/endpoints";
 
 const UserCard = ({user}) => {
 
-    const { firstName, lastName, about, photoUrl } = user;
+    const { _id, firstName, lastName, about, photoUrl } = user;
+
+    const handleAction = async (action) => {
+        try {
+            const response = await axios.post(ENDPOINTS.SEND_REQUEST(action, _id), {}, {
+                withCredentials: true
+            });
+            console.log(response);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <div className="card bg-base-300 w-96 h-[400px] shadow-sm flex">
@@ -16,8 +29,8 @@ const UserCard = ({user}) => {
                 <p>{about}</p>
 
                 <div className="card-actions justify-center mt-2">
-                    <button className="btn btn-primary">Ignore</button>
-                    <button className="btn btn-secondary">Interested</button>
+                    <button className="btn btn-primary" onClick={() => handleAction("ignored")}>Ignore</button>
+                    <button className="btn btn-secondary" onClick={() => handleAction("interested")}>Interested</button>
                 </div>
             </div>
         </div>
