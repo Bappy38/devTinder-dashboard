@@ -11,6 +11,7 @@ import { NOTIFICATION_TYPE } from "./constants/notificationType";
 import { useState } from "react";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
+import Chat from "./components/Chat";
 
 function App() {
   const [notification, setNotification] = useState(null);
@@ -31,6 +32,7 @@ function App() {
               <Route path="signup" element={<SignUp/>} />
               <Route path="connections" element={<Connections/>} />
               <Route path="requests" element={<Requests/>} />
+              <Route path="chat/:targetUserId" element={<Chat/>}/>
             </Route>
           </Routes>
         </BrowserRouter>

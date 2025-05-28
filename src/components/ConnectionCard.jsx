@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { calculateAge } from "../helpers/dateTimeHelper";
 
 const ConnectionCard = ({ user }) => {
@@ -36,7 +37,9 @@ const ConnectionCard = ({ user }) => {
                     <button
                         className="btn btn-primary btn-sm"
                     >
-                        Message
+                        <Link to={`/chat/${user._id}`} className="justify-between">
+                            Message
+                        </Link>
                     </button>
                 </div>
             </div>
