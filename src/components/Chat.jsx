@@ -1,37 +1,36 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { socket } from '../helpers/socket';
 
 const Chat = () => {
 
     const {targetUserId} = useParams();
     console.log(targetUserId);
 
-    const [messages, setMessages] = useState([
-        {
-        id: 1,
-        text: 'Hey there! How are you doing?',
-        sender: 'receiver',
-        timestamp: '10:30 AM',
-        profilePic: 'https://randomuser.me/api/portraits/women/44.jpg'
-        },
-        {
-        id: 2,
-        text: 'I\'m good, thanks! How about you?',
-        sender: 'sender',
-        timestamp: '10:32 AM',
-        profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
-        },
-        {
-        id: 3,
-        text: 'Pretty good! Just working on some React components.',
-        sender: 'receiver',
-        timestamp: '10:33 AM',
-        profilePic: 'https://randomuser.me/api/portraits/women/44.jpg'
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     const messagesEndRef = useRef(null);
+    const roomId = 'room-124'; // TODO:: roomId will consist of sender and receiver user id
+
+    useEffect(() => {
+
+        if (!socket.connected) {
+            socket.connect();
+        }
+
+        socket.emit('joinRoom', roomId);
+
+        socket.on('receiveMessage', (msg) => {
+            setMessages((prev) => [...prev, msg]);
+        });
+
+        return () => {
+            socket.off('receiveMessage');
+            socket.disconnect();     // Optional: only if component is unmount permanently
+        };
+    }, [roomId]);
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -41,15 +40,16 @@ const Chat = () => {
         if (!newMessage.trim()) return;
 
         const message = {
-        id: messages.length + 1,
-        text: newMessage,
-        sender: 'sender',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
+            id: messages.length + 1,
+            text: newMessage,
+            sender: 'sender',
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
         };
 
-        setMessages([...messages, message]);
+        // setMessages([...messages, message]);
         setNewMessage('');
+        socket.emit('sendMessage', { roomId, message });
     };
 
     return (

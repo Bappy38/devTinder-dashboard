@@ -12,8 +12,13 @@ import { useState } from "react";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import Chat from "./components/Chat";
+import { API_BASE_URL } from "./constants/endpoints";
+import { io } from "socket.io-client";
+import { SocketContext } from "./helpers/socket";
 
 function App() {
+  const socket = io(API_BASE_URL);
+
   const [notification, setNotification] = useState(null);
 
   window.showNotification = (id, message, type = NOTIFICATION_TYPE.INFO) => {
@@ -22,6 +27,7 @@ function App() {
 
   return (
     <>
+    <SocketContext.Provider value={socket}>
       <Provider store={appStore}>
         <BrowserRouter>
           <Routes>
@@ -46,6 +52,8 @@ function App() {
           )
         }
       </Provider>
+    </SocketContext.Provider>
+      
     </>
   )
 }
