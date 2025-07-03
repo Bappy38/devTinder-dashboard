@@ -1,11 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { socket } from '../helpers/socket';
+import useUser from '../hooks/useUser';
+import { useSelector } from 'react-redux';
 
 const Chat = () => {
 
     const {targetUserId} = useParams();
-    console.log(targetUserId);
+    const targetUser = useUser(targetUserId);
+    const currentUser = useSelector((state) => state.user);
+
+    console.log(currentUser);
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -58,12 +63,12 @@ const Chat = () => {
         <div className="bg-gray-100 p-4 border-b border-gray-200">
             <div className="flex items-center">
             <img 
-                src="https://randomuser.me/api/portraits/women/44.jpg" 
+                src={targetUser?.photoUrl}
                 alt="Profile" 
                 className="w-10 h-10 rounded-full mr-3"
             />
             <div>
-                <h2 className="font-semibold">Sarah Johnson</h2>
+                <h2 className="font-semibold">{targetUser?.firstName} {targetUser?.lastName}</h2>
                 <p className="text-xs text-gray-500">Online</p>
             </div>
             </div>
@@ -77,7 +82,7 @@ const Chat = () => {
             >
                 {message.sender === 'receiver' && (
                 <img 
-                    src={message.profilePic} 
+                    src={message.profilePic}
                     alt="Profile" 
                     className="w-8 h-8 rounded-full mr-3 self-end"
                 />
@@ -95,7 +100,7 @@ const Chat = () => {
 
                 {message.sender === 'sender' && (
                 <img 
-                    src={message.profilePic} 
+                    src={currentUser?.photoUrl}
                     alt="Profile" 
                     className="w-8 h-8 rounded-full ml-3 self-end"
                 />
