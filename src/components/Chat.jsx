@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { socket } from '../helpers/socket';
+import { generateRoomId, socket } from '../helpers/socket';
 import useUser from '../hooks/useUser';
 import { useSelector } from 'react-redux';
 
@@ -10,18 +10,21 @@ const Chat = () => {
     const targetUser = useUser(targetUserId);
     const currentUser = useSelector((state) => state.user);
 
-    console.log(currentUser);
-
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     const messagesEndRef = useRef(null);
-    const roomId = 'room-124'; // TODO:: roomId will consist of sender and receiver user id
+    const roomId = generateRoomId(currentUser?._id, targetUser?._id);
+    console.log(roomId);
 
     useEffect(() => {
 
         if (!socket.connected) {
             socket.connect();
+        }
+
+        if (!roomId) {
+            return;
         }
 
         socket.emit('joinRoom', roomId);
@@ -47,7 +50,7 @@ const Chat = () => {
         const message = {
             id: messages.length + 1,
             text: newMessage,
-            sender: 'sender',
+            sender: currentUser?._id,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
         };
@@ -78,27 +81,27 @@ const Chat = () => {
             {messages.map((message) => (
             <div 
                 key={message.id}
-                className={`flex mb-4 ${message.sender === 'sender' ? 'justify-end' : 'justify-start'}`}
+                className={`flex mb-4 ${message.sender === currentUser?._id ? 'justify-end' : 'justify-start'}`}
             >
-                {message.sender === 'receiver' && (
+                {message.sender === targetUser?._id && (
                 <img 
-                    src={message.profilePic}
+                    src={targetUser?.photoUrl}
                     alt="Profile" 
                     className="w-8 h-8 rounded-full mr-3 self-end"
                 />
                 )}
                 
-                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.sender === 'sender' 
+                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.sender === currentUser?._id 
                 ? 'bg-blue-500 text-white rounded-br-none' 
                 : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
                 >
                 <p>{message.text}</p>
-                <p className={`text-xs mt-1 ${message.sender === 'sender' ? 'text-blue-100' : 'text-gray-500'}`}>
+                <p className={`text-xs mt-1 ${message.sender === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
                     {message.timestamp}
                 </p>
                 </div>
 
-                {message.sender === 'sender' && (
+                {message.sender === currentUser?.id && (
                 <img 
                     src={currentUser?.photoUrl}
                     alt="Profile" 
