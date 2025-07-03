@@ -77,29 +77,29 @@ const Chat = () => {
                 className={`flex mb-4 ${message.sender === currentUser?._id ? 'justify-end' : 'justify-start'}`}
             >
                 {message.sender === targetUser?._id && (
-                <img 
-                    src={targetUser?.photoUrl}
-                    alt="Profile" 
-                    className="w-8 h-8 rounded-full mr-3 self-end"
-                />
+                    <img 
+                        src={targetUser?.photoUrl}
+                        alt="Profile" 
+                        className="w-8 h-8 rounded-full mr-3 self-end"
+                    />
                 )}
                 
                 <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.sender === currentUser?._id 
                 ? 'bg-blue-500 text-white rounded-br-none' 
                 : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
                 >
-                <p>{message.text}</p>
-                <p className={`text-xs mt-1 ${message.sender === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
-                    {message.timestamp}
-                </p>
+                    <p>{message.text}</p>
+                    <p className={`text-xs mt-1 ${message.sender === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
+                        {message.timestamp}
+                    </p>
                 </div>
 
                 {message.sender === currentUser?.id && (
-                <img 
-                    src={currentUser?.photoUrl}
-                    alt="Profile" 
-                    className="w-8 h-8 rounded-full ml-3 self-end"
-                />
+                    <img 
+                        src={currentUser?.photoUrl}
+                        alt="Profile" 
+                        className="w-8 h-8 rounded-full ml-3 self-end"
+                    />
                 )}
             </div>
             ))}
