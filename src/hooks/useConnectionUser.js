@@ -3,28 +3,28 @@ import { ENDPOINTS } from "../constants/endpoints"
 import { useEffect, useState } from "react"
 
 
-const useUser = (userId) => {
+const useConnectionUser = (connectionId) => {
 
-    const [ user, setUser ] = useState(null);
+    const [ connection, setConnection ] = useState(null);
 
     useEffect(() => {
 
         const fetchUser = async () => {
 
             try {
-                const response = await axios.get(ENDPOINTS.GET_USER(userId), {
+                const response = await axios.get(ENDPOINTS.GET_CONNECTION(connectionId), {
                     withCredentials: true
                 });
-                setUser(response.data.data);
+                setConnection(response.data.data);
             } catch (err) {
                 console.error(err);
             }
         }
 
         fetchUser();
-    }, [userId]);
+    }, [connectionId]);
 
-    return user;
+    return connection?.user;
 }
 
-export default useUser;
+export default useConnectionUser;

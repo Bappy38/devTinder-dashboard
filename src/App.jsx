@@ -38,7 +38,7 @@ function App() {
               <Route path="signup" element={<SignUp/>} />
               <Route path="connections" element={<Connections/>} />
               <Route path="requests" element={<Requests/>} />
-              <Route path="chat/:targetUserId" element={<Chat/>}/>
+              <Route path="chat/:connectionId" element={<Chat/>}/>
             </Route>
           </Routes>
         </BrowserRouter>

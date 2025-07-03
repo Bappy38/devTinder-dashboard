@@ -1,21 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { generateRoomId, socket } from '../helpers/socket';
-import useUser from '../hooks/useUser';
+import { socket } from '../helpers/socket';
 import { useSelector } from 'react-redux';
+import useConnectionUser from '../hooks/useConnectionUser';
 
 const Chat = () => {
 
-    const {targetUserId} = useParams();
-    const targetUser = useUser(targetUserId);
+    const { connectionId } = useParams();
+    const targetUser = useConnectionUser(connectionId);
     const currentUser = useSelector((state) => state.user);
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     const messagesEndRef = useRef(null);
-    const roomId = generateRoomId(currentUser?._id, targetUser?._id);
-    console.log(roomId);
 
     useEffect(() => {
 
@@ -23,11 +21,7 @@ const Chat = () => {
             socket.connect();
         }
 
-        if (!roomId) {
-            return;
-        }
-
-        socket.emit('joinRoom', roomId);
+        socket.emit('joinRoom', connectionId);
 
         socket.on('receiveMessage', (msg) => {
             setMessages((prev) => [...prev, msg]);
@@ -37,7 +31,7 @@ const Chat = () => {
             socket.off('receiveMessage');
             socket.disconnect();     // Optional: only if component is unmount permanently
         };
-    }, [roomId]);
+    }, [connectionId]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -55,9 +49,8 @@ const Chat = () => {
             profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
         };
 
-        // setMessages([...messages, message]);
         setNewMessage('');
-        socket.emit('sendMessage', { roomId, message });
+        socket.emit('sendMessage', { roomId: connectionId, message });
     };
 
     return (
