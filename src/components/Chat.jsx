@@ -41,16 +41,8 @@ const Chat = () => {
         e.preventDefault();
         if (!newMessage.trim()) return;
 
-        const message = {
-            id: messages.length + 1,
-            text: newMessage,
-            sender: currentUser?._id,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
-        };
-
         setNewMessage('');
-        socket.emit('sendMessage', { roomId: connectionId, message });
+        socket.emit('sendMessage', { roomId: connectionId, text: newMessage });
     };
 
     return (
@@ -74,9 +66,9 @@ const Chat = () => {
             {messages.map((message) => (
             <div 
                 key={message.id}
-                className={`flex mb-4 ${message.sender === currentUser?._id ? 'justify-end' : 'justify-start'}`}
+                className={`flex mb-4 ${message.senderId === currentUser?._id ? 'justify-end' : 'justify-start'}`}
             >
-                {message.sender === targetUser?._id && (
+                {message.senderId === targetUser?._id && (
                     <img 
                         src={targetUser?.photoUrl}
                         alt="Profile" 
@@ -84,17 +76,17 @@ const Chat = () => {
                     />
                 )}
                 
-                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.sender === currentUser?._id 
+                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.senderId === currentUser?._id 
                 ? 'bg-blue-500 text-white rounded-br-none' 
                 : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
                 >
                     <p>{message.text}</p>
-                    <p className={`text-xs mt-1 ${message.sender === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
+                    <p className={`text-xs mt-1 ${message.senderId === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
                         {message.timestamp}
                     </p>
                 </div>
 
-                {message.sender === currentUser?.id && (
+                {message.senderId === currentUser?.id && (
                     <img 
                         src={currentUser?.photoUrl}
                         alt="Profile" 
