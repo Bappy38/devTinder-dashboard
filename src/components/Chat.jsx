@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import useConnectionUser from '../hooks/useConnectionUser';
 import useConnectChat from '../hooks/useConnectChat';
 import MessageInput from './MessageInput';
+import ChatHeader from './ChatHeader';
 
 const Chat = () => {
 
@@ -22,19 +23,7 @@ const Chat = () => {
     return (
         <div className="flex flex-col mt-2 h-[500px] max-w-3xl mx-auto border border-gray-200 rounded-lg overflow-hidden">
             
-            <div className="bg-gray-100 p-4 border-b border-gray-200">
-                <div className="flex items-center">
-                <img 
-                    src={targetUser?.photoUrl}
-                    alt="Profile" 
-                    className="w-10 h-10 rounded-full mr-3"
-                />
-                <div>
-                    <h2 className="font-semibold">{targetUser?.firstName} {targetUser?.lastName}</h2>
-                    <p className="text-xs text-gray-500">Online</p>
-                </div>
-                </div>
-            </div>
+            <ChatHeader targetUser={targetUser}/>
 
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                 {messages.map((message) => (
