@@ -21,3 +21,5 @@
 - Implement Connections component to show existing connections
 - Implement Requests component to show all the connection requests
 - Implement SignUp component
+- Implement Chat Component
+- Ensure Scalability in Chat Component. What if user scrolls up thousands of messages?

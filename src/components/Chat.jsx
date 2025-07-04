@@ -1,37 +1,38 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { socket } from '../helpers/socket';
+import { useSelector } from 'react-redux';
+import useConnectionUser from '../hooks/useConnectionUser';
 
 const Chat = () => {
 
-    const {targetUserId} = useParams();
-    console.log(targetUserId);
+    const { connectionId } = useParams();
+    const targetUser = useConnectionUser(connectionId);
+    const currentUser = useSelector((state) => state.user);
 
-    const [messages, setMessages] = useState([
-        {
-        id: 1,
-        text: 'Hey there! How are you doing?',
-        sender: 'receiver',
-        timestamp: '10:30 AM',
-        profilePic: 'https://randomuser.me/api/portraits/women/44.jpg'
-        },
-        {
-        id: 2,
-        text: 'I\'m good, thanks! How about you?',
-        sender: 'sender',
-        timestamp: '10:32 AM',
-        profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
-        },
-        {
-        id: 3,
-        text: 'Pretty good! Just working on some React components.',
-        sender: 'receiver',
-        timestamp: '10:33 AM',
-        profilePic: 'https://randomuser.me/api/portraits/women/44.jpg'
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+
+        if (!socket.connected) {
+            socket.connect();
+        }
+
+        socket.emit('joinRoom', connectionId);
+
+        socket.on('receiveMessage', (msg) => {
+            setMessages((prev) => [...prev, msg]);
+        });
+
+        return () => {
+            socket.off('receiveMessage');
+            socket.disconnect();     // Optional: only if component is unmount permanently
+        };
+    }, [connectionId]);
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -41,15 +42,15 @@ const Chat = () => {
         if (!newMessage.trim()) return;
 
         const message = {
-        id: messages.length + 1,
-        text: newMessage,
-        sender: 'sender',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
+            id: messages.length + 1,
+            text: newMessage,
+            sender: currentUser?._id,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'
         };
 
-        setMessages([...messages, message]);
         setNewMessage('');
+        socket.emit('sendMessage', { roomId: connectionId, message });
     };
 
     return (
@@ -58,12 +59,12 @@ const Chat = () => {
         <div className="bg-gray-100 p-4 border-b border-gray-200">
             <div className="flex items-center">
             <img 
-                src="https://randomuser.me/api/portraits/women/44.jpg" 
+                src={targetUser?.photoUrl}
                 alt="Profile" 
                 className="w-10 h-10 rounded-full mr-3"
             />
             <div>
-                <h2 className="font-semibold">Sarah Johnson</h2>
+                <h2 className="font-semibold">{targetUser?.firstName} {targetUser?.lastName}</h2>
                 <p className="text-xs text-gray-500">Online</p>
             </div>
             </div>
@@ -73,32 +74,32 @@ const Chat = () => {
             {messages.map((message) => (
             <div 
                 key={message.id}
-                className={`flex mb-4 ${message.sender === 'sender' ? 'justify-end' : 'justify-start'}`}
+                className={`flex mb-4 ${message.sender === currentUser?._id ? 'justify-end' : 'justify-start'}`}
             >
-                {message.sender === 'receiver' && (
-                <img 
-                    src={message.profilePic} 
-                    alt="Profile" 
-                    className="w-8 h-8 rounded-full mr-3 self-end"
-                />
+                {message.sender === targetUser?._id && (
+                    <img 
+                        src={targetUser?.photoUrl}
+                        alt="Profile" 
+                        className="w-8 h-8 rounded-full mr-3 self-end"
+                    />
                 )}
                 
-                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.sender === 'sender' 
+                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.sender === currentUser?._id 
                 ? 'bg-blue-500 text-white rounded-br-none' 
                 : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
                 >
-                <p>{message.text}</p>
-                <p className={`text-xs mt-1 ${message.sender === 'sender' ? 'text-blue-100' : 'text-gray-500'}`}>
-                    {message.timestamp}
-                </p>
+                    <p>{message.text}</p>
+                    <p className={`text-xs mt-1 ${message.sender === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
+                        {message.timestamp}
+                    </p>
                 </div>
 
-                {message.sender === 'sender' && (
-                <img 
-                    src={message.profilePic} 
-                    alt="Profile" 
-                    className="w-8 h-8 rounded-full ml-3 self-end"
-                />
+                {message.sender === currentUser?.id && (
+                    <img 
+                        src={currentUser?.photoUrl}
+                        alt="Profile" 
+                        className="w-8 h-8 rounded-full ml-3 self-end"
+                    />
                 )}
             </div>
             ))}

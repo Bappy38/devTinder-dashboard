@@ -46,7 +46,7 @@ const Connections = () => {
     return (
         <div className="flex flex-col items-center">
             {connections.map((connection) => (
-                <ConnectionCard key={connection._id} user={connection} />
+                <ConnectionCard key={connection._id} connection={connection} />
             ))}
         </div>
     )
