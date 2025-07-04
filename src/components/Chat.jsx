@@ -1,38 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { socket } from '../helpers/socket';
 import { useSelector } from 'react-redux';
 import useConnectionUser from '../hooks/useConnectionUser';
-import { EVENTS } from '../constants/events';
+import useConnectChat from '../hooks/useConnectChat';
 
 const Chat = () => {
 
     const { connectionId } = useParams();
-    const targetUser = useConnectionUser(connectionId);
     const currentUser = useSelector((state) => state.user);
 
-    const [messages, setMessages] = useState([]);
+    const targetUser = useConnectionUser(connectionId);
+    const { messages, sendMessage } = useConnectChat(connectionId);
+
     const [newMessage, setNewMessage] = useState('');
 
     const messagesEndRef = useRef(null);
-
-    useEffect(() => {
-
-        if (!socket.connected) {
-            socket.connect();
-        }
-
-        socket.emit(EVENTS.JOIN_ROOM, connectionId);
-
-        socket.on(EVENTS.RECEIVE_MESSAGE, (msg) => {
-            setMessages((prev) => [...prev, msg]);
-        });
-
-        return () => {
-            socket.off(EVENTS.RECEIVE_MESSAGE);
-            socket.disconnect();
-        };
-    }, [connectionId]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -42,8 +24,8 @@ const Chat = () => {
         e.preventDefault();
         if (!newMessage.trim()) return;
 
+        sendMessage(newMessage);
         setNewMessage('');
-        socket.emit(EVENTS.SEND_MESSAGE, { roomId: connectionId, text: newMessage });
     };
 
     return (
