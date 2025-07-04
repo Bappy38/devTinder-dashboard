@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { socket } from '../helpers/socket';
 import { useSelector } from 'react-redux';
 import useConnectionUser from '../hooks/useConnectionUser';
+import { EVENTS } from '../constants/events';
 
 const Chat = () => {
 
@@ -21,15 +22,15 @@ const Chat = () => {
             socket.connect();
         }
 
-        socket.emit('joinRoom', connectionId);
+        socket.emit(EVENTS.JOIN_ROOM, connectionId);
 
-        socket.on('receiveMessage', (msg) => {
+        socket.on(EVENTS.RECEIVE_MESSAGE, (msg) => {
             setMessages((prev) => [...prev, msg]);
         });
 
         return () => {
-            socket.off('receiveMessage');
-            socket.disconnect();     // Optional: only if component is unmount permanently
+            socket.off(EVENTS.RECEIVE_MESSAGE);
+            socket.disconnect();
         };
     }, [connectionId]);
 
@@ -42,7 +43,7 @@ const Chat = () => {
         if (!newMessage.trim()) return;
 
         setNewMessage('');
-        socket.emit('sendMessage', { roomId: connectionId, text: newMessage });
+        socket.emit(EVENTS.SEND_MESSAGE, { roomId: connectionId, text: newMessage });
     };
 
     return (
