@@ -22,4 +22,4 @@
 - Implement Requests component to show all the connection requests
 - Implement SignUp component
 - Implement Chat Component
-- Ensure Scalability in Chat Component. What if user scrolls up thousands of messages?
+- Ensure Scalability in Chat Component. What if user scrolls up thousands of messages? Implement Virtualization
