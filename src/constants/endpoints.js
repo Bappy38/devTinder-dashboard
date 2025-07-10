@@ -14,5 +14,6 @@ export const ENDPOINTS = {
     GET_REQUESTS: API_BASE_URL + '/user/request/received',
 
     SEND_REQUEST: (Status, ToUserId) => `${API_BASE_URL}/request/send/${Status}/${ToUserId}`,
-    REVIEW_REQUEST: (Status, RequestId) => `${API_BASE_URL}/request/review/${Status}/${RequestId}`
+    REVIEW_REQUEST: (Status, RequestId) => `${API_BASE_URL}/request/review/${Status}/${RequestId}`,
+    GET_MESSAGES: (roomId, limit = 5, cursor = null) => `${API_BASE_URL}/message/${roomId}?limit=${limit}${cursor ? `&cursor=${cursor}` : ''}`
 };
