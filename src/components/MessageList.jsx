@@ -1,19 +1,43 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import usePaginatedMessages from "../hooks/usePaginatedMessages";
 
 
-const MessageList = ({ connectionId, currentUser, targetUser, messages }) => {
+const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) => {
 
     const messagesEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
-
     const { persistedMessages, loading } = usePaginatedMessages(connectionId, scrollContainerRef);
 
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    const allMessages = [...persistedMessages, ...liveMessages];
+    const [userAtBottom, setUserAtBottom] = useState(true);
+    const prevLiveMessageLength = useRef(liveMessages.length);
 
-    const allMessages = [...persistedMessages, ...messages];
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+        const handleScroll = () => {
+            const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+            setUserAtBottom(atBottom);
+        };
+        container.addEventListener('scroll', handleScroll);
+        // Initial check
+        handleScroll();
+        return () => container.removeEventListener('scroll', handleScroll);
+    }, [allMessages.length]);
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const newMessageArrived = liveMessages.length > prevLiveMessageLength.current;
+        const initialLoad = prevLiveMessageLength.current === 0 && allMessages.length > 0;
+        const shouldScrollToBottom = userAtBottom && (newMessageArrived || initialLoad);
+        
+        if (shouldScrollToBottom) {
+            container.scrollTop = container.scrollHeight;
+        }
+        prevLiveMessageLength.current = liveMessages.length;
+    }, [liveMessages.length, allMessages.length, userAtBottom]);
 
     return (
         <div

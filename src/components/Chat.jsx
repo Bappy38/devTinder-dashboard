@@ -24,7 +24,7 @@ const Chat = () => {
                 connectionId={connectionId}
                 currentUser={currentUser}
                 targetUser={targetUser}
-                messages={messages}
+                liveMessages={messages}
             />
 
             <MessageInput sendMessage={sendMessage}/>
