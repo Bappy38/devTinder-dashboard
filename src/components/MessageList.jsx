@@ -64,7 +64,7 @@ const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) =>
                 ? 'bg-blue-500 text-white rounded-br-none' 
                 : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
                 >
-                    <p>{message.text}</p>
+                    <p className="break-words">{message.text}</p>
                     <p className={`text-xs mt-1 ${message.senderId === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
                         {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
