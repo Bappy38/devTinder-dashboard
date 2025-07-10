@@ -66,7 +66,7 @@ const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) =>
                 >
                     <p>{message.text}</p>
                     <p className={`text-xs mt-1 ${message.senderId === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
-                        {message.timestamp}
+                        {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                 </div>
 
