@@ -3,30 +3,37 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import useConnectionUser from '../hooks/useConnectionUser';
 import useConnectChat from '../hooks/useConnectChat';
+import usePaginatedMessages from '../hooks/usePaginatedMessages';
 import MessageInput from './MessageInput';
 import ChatHeader from './ChatHeader';
 
 const Chat = () => {
-
     const { connectionId } = useParams();
     const currentUser = useSelector((state) => state.user);
-
     const targetUser = useConnectionUser(connectionId);
     const { messages, sendMessage } = useConnectChat(connectionId);
-
     const messagesEndRef = useRef(null);
+    const scrollContainerRef = useRef(null);
+
+    const { persistedMessages, loading } = usePaginatedMessages(connectionId, scrollContainerRef);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
+    const allMessages = [...persistedMessages, ...messages];
+
     return (
         <div className="flex flex-col mt-2 h-[500px] max-w-3xl mx-auto border border-gray-200 rounded-lg overflow-hidden">
-            
             <ChatHeader targetUser={targetUser}/>
-
-            <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-                {messages.map((message) => (
+            <div
+                className="flex-1 p-4 overflow-y-auto bg-gray-50"
+                ref={scrollContainerRef}
+            >
+                {loading && (
+                    <div className="text-center text-xs text-gray-400 mb-2">Loading...</div>
+                )}
+                {allMessages.map((message) => (
                 <div 
                     key={message.id}
                     className={`flex mb-4 ${message.senderId === currentUser?._id ? 'justify-end' : 'justify-start'}`}
