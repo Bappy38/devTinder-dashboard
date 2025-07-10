@@ -35,7 +35,7 @@ const Chat = () => {
                 )}
                 {allMessages.map((message) => (
                 <div 
-                    key={message.id}
+                    key={message._id}
                     className={`flex mb-4 ${message.senderId === currentUser?._id ? 'justify-end' : 'justify-start'}`}
                 >
                     {message.senderId === targetUser?._id && (
