@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { ENDPOINTS } from '../constants/endpoints';
+import { MESSAGE_BATCH_SIZE } from '../constants/constants';
 import axios from 'axios';
 
 const usePaginatedMessages = (connectionId, scrollContainerRef) => {
@@ -12,7 +13,7 @@ const usePaginatedMessages = (connectionId, scrollContainerRef) => {
         if (loading || (!hasMore && !initial)) return;
         setLoading(true);
         try {
-            const response = await axios.get(ENDPOINTS.GET_MESSAGES(connectionId, 5, cursor), {
+            const response = await axios.get(ENDPOINTS.GET_MESSAGES(connectionId, MESSAGE_BATCH_SIZE, cursor), {
                 withCredentials: true
             });
             if (initial) {
