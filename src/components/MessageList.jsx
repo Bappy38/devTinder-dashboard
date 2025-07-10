@@ -3,15 +3,17 @@ import usePaginatedMessages from "../hooks/usePaginatedMessages";
 
 
 const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) => {
-
     const messagesEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
+    const prevScrollHeight = useRef(0);
+    const prevPersistedLength = useRef(0);
     const { persistedMessages, loading } = usePaginatedMessages(connectionId, scrollContainerRef);
 
     const allMessages = [...persistedMessages, ...liveMessages];
     const [userAtBottom, setUserAtBottom] = useState(true);
     const prevLiveMessageLength = useRef(liveMessages.length);
 
+    // Track if user is at the bottom
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (!container) return;
@@ -25,10 +27,23 @@ const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) =>
         return () => container.removeEventListener('scroll', handleScroll);
     }, [allMessages.length]);
 
+    // Preserve scroll position when older messages are prepended
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (!container) return;
+        
+        if (persistedMessages.length > prevPersistedLength.current) {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop = newScrollHeight - prevScrollHeight.current;
+        }
+        prevPersistedLength.current = persistedMessages.length;
+        prevScrollHeight.current = container.scrollHeight;
+    }, [persistedMessages.length]);
 
+    // Scroll to bottom for new live messages or initial load if user is at the bottom
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
         const newMessageArrived = liveMessages.length > prevLiveMessageLength.current;
         const initialLoad = prevLiveMessageLength.current === 0 && allMessages.length > 0;
         const shouldScrollToBottom = userAtBottom && (newMessageArrived || initialLoad);
