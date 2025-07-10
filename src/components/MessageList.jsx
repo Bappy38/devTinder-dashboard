@@ -3,15 +3,17 @@ import usePaginatedMessages from "../hooks/usePaginatedMessages";
 
 
 const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) => {
-
     const messagesEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
+    const prevScrollHeight = useRef(0);
+    const prevPersistedLength = useRef(0);
     const { persistedMessages, loading } = usePaginatedMessages(connectionId, scrollContainerRef);
 
     const allMessages = [...persistedMessages, ...liveMessages];
     const [userAtBottom, setUserAtBottom] = useState(true);
     const prevLiveMessageLength = useRef(liveMessages.length);
 
+    // Track if user is at the bottom
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (!container) return;
@@ -25,10 +27,23 @@ const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) =>
         return () => container.removeEventListener('scroll', handleScroll);
     }, [allMessages.length]);
 
+    // Preserve scroll position when older messages are prepended
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (!container) return;
+        
+        if (persistedMessages.length > prevPersistedLength.current) {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop = newScrollHeight - prevScrollHeight.current;
+        }
+        prevPersistedLength.current = persistedMessages.length;
+        prevScrollHeight.current = container.scrollHeight;
+    }, [persistedMessages.length]);
 
+    // Scroll to bottom for new live messages or initial load if user is at the bottom
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
         const newMessageArrived = liveMessages.length > prevLiveMessageLength.current;
         const initialLoad = prevLiveMessageLength.current === 0 && allMessages.length > 0;
         const shouldScrollToBottom = userAtBottom && (newMessageArrived || initialLoad);
@@ -45,7 +60,13 @@ const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) =>
             ref={scrollContainerRef}
         >
             {loading && (
-                <div className="text-center text-xs text-gray-400 mb-2">Loading...</div>
+                <div className="text-center text-xs text-gray-400 mb-2 flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    Loading...
+                </div>
             )}
             {allMessages.map((message) => (
             <div 
