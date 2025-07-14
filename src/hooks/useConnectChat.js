@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react"
-import { socket } from "../helpers/socket"
+import { useEffect, useState, useRef } from "react"
+import { createSocketConnection } from "../helpers/socket"
 import { EVENTS } from "../constants/events";
 
 
 const useConnectChat = (roomId) => {
-
     const [messages, setMessages] = useState([]);
+    const socketRef = useRef();
 
     useEffect(() => {
+        socketRef.current = createSocketConnection();
+        const socket = socketRef.current;
 
         if (!socket.connected) {
             socket.connect();
@@ -26,7 +28,9 @@ const useConnectChat = (roomId) => {
     }, [roomId]);
 
     const sendMessage = (text) => {
-        socket.emit(EVENTS.SEND_MESSAGE, { roomId, text });
+        if (socketRef.current) {
+            socketRef.current.emit(EVENTS.SEND_MESSAGE, { roomId, text });
+        }
     }
 
     return {
