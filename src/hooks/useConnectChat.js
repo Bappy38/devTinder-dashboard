@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import { createSocketConnection } from "../helpers/socket"
 import { EVENTS } from "../constants/events";
-
+import { HEARTBEAT_INTERVAL_MS } from "../constants/constants";
 
 const useConnectChat = (roomId) => {
     const [messages, setMessages] = useState([]);
@@ -21,9 +21,14 @@ const useConnectChat = (roomId) => {
             setMessages((prev) => [...prev, msg]);
         });
 
+        const heartbeat = setInterval(() => {
+            socket.emit(EVENTS.HEARTBEAT);
+        }, HEARTBEAT_INTERVAL_MS);
+
         return () => {
             socket.off(EVENTS.RECEIVE_MESSAGE);
             socket.disconnect();
+            clearInterval(heartbeat);
         }
     }, [roomId]);
 
