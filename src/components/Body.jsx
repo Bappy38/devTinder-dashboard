@@ -5,11 +5,12 @@ import axios from "axios";
 import { ENDPOINTS } from "../constants/endpoints";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
+import useHeartbeat from "../hooks/useHeartbeat";
 
 const Body = () => {
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    useHeartbeat();
 
     useEffect(() => {
         fetchUser();
