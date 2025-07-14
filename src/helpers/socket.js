@@ -18,8 +18,3 @@ export const createSocketConnection = () => {
         path: '/api/socket.io'
     });
 }
-
-export const socket = io(API_BASE_URL, {
-    autoConnect: true,
-    withCredentials: true
-});
