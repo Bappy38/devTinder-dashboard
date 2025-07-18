@@ -69,36 +69,36 @@ const MessageList = ({ connectionId, currentUser, targetUser, liveMessages }) =>
                 </div>
             )}
             {allMessages.map((message) => (
-            <div 
-                key={message._id}
-                className={`flex mb-4 ${message.senderId === currentUser?._id ? 'justify-end' : 'justify-start'}`}
-            >
-                {message.senderId === targetUser?._id && (
-                    <img 
-                        src={targetUser?.photoUrl}
-                        alt="Profile" 
-                        className="w-8 h-8 rounded-full mr-3 self-end"
-                    />
-                )}
-                
-                <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.senderId === currentUser?._id 
-                ? 'bg-blue-500 text-white rounded-br-none' 
-                : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
+                <div 
+                    key={message._id}
+                    className={`flex mb-4 ${message.senderId === currentUser?._id ? 'justify-end' : 'justify-start'}`}
                 >
-                    <p className="break-words">{message.text}</p>
-                    <p className={`text-xs mt-1 ${message.senderId === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
-                        {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                </div>
+                    {message.senderId === targetUser?._id && (
+                        <img 
+                            src={targetUser?.photoUrl}
+                            alt="Profile" 
+                            className="w-8 h-8 rounded-full mr-3 self-end"
+                        />
+                    )}
+                    
+                    <div className={`max-w-xs md:max-w-md rounded-lg p-3 ${message.senderId === currentUser?._id 
+                    ? 'bg-blue-500 text-white rounded-br-none' 
+                    : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}
+                    >
+                        <p className="break-words">{message.text}</p>
+                        <p className={`text-xs mt-1 ${message.senderId === currentUser?._id ? 'text-blue-100' : 'text-gray-500'}`}>
+                            {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                    </div>
 
-                {message.senderId === currentUser?.id && (
-                    <img 
-                        src={currentUser?.photoUrl}
-                        alt="Profile" 
-                        className="w-8 h-8 rounded-full ml-3 self-end"
-                    />
-                )}
-            </div>
+                    {message.senderId === currentUser?.id && (
+                        <img 
+                            src={currentUser?.photoUrl}
+                            alt="Profile" 
+                            className="w-8 h-8 rounded-full ml-3 self-end"
+                        />
+                    )}
+                </div>
             ))}
             <div ref={messagesEndRef} />
         </div>
