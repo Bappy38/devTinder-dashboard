@@ -13,3 +13,18 @@ export function calculateAge(dateString) {
     }
     return age;
 }
+
+export function timeAgo(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+
+    const now = new Date();
+    const diffSec = Math.floor((now - date) / 1000);
+
+    if (diffSec < 60) return 'Online 🟢';
+    if (diffSec < 3600) return `${Math.floor(diffSec / 60)} min ago`;
+    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hr ago`;
+
+    const days = Math.floor(diffSec / 86400);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+};

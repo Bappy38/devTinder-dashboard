@@ -16,13 +16,14 @@ const usePaginatedMessages = (connectionId, scrollContainerRef) => {
             const response = await axios.get(ENDPOINTS.GET_MESSAGES(connectionId, MESSAGE_BATCH_SIZE, cursor), {
                 withCredentials: true
             });
+            const { messages, nextCursor } = response.data.data;
             if (initial) {
-                setPersistedMessages(response.data.messages);
+                setPersistedMessages(messages);
             } else {
-                setPersistedMessages((prev) => [...response.data.messages, ...prev]);
+                setPersistedMessages((prev) => [...messages, ...prev]);
             }
-            setCursor(response.data.nextCursor);
-            setHasMore(!!response.data.nextCursor);
+            setCursor(nextCursor);
+            setHasMore(!!nextCursor);
         } catch (err) {
             console.error('Error fetching messages:', err);
         } finally {

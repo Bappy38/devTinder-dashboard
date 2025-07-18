@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react"
 import { createSocketConnection } from "../helpers/socket"
 import { EVENTS } from "../constants/events";
 
-
 const useConnectChat = (roomId) => {
     const [messages, setMessages] = useState([]);
     const socketRef = useRef();

@@ -1,6 +1,9 @@
+import { timeAgo } from "../helpers/dateTimeHelper";
 
 
 const ChatHeader = ({targetUser}) => {
+
+    const lastSeen = timeAgo(targetUser.lastSeen);
 
     if (!targetUser) {
         return <></>;
@@ -16,7 +19,7 @@ const ChatHeader = ({targetUser}) => {
             />
             <div>
                 <h2 className="font-semibold">{targetUser.firstName} {targetUser.lastName}</h2>
-                <p className="text-xs text-gray-500">Online</p>
+                <p className="text-xs text-gray-500">{lastSeen}</p>
             </div>
             </div>
         </div>
