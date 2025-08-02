@@ -1,4 +1,4 @@
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { useEffect, useState } from "react";
 import { ENDPOINTS } from "../constants/endpoints";
 import ConnectionCard from "./ConnectionCard";
@@ -12,7 +12,7 @@ const Connections = () => {
     }, []);
 
     const fetchConnections = async() => {
-        const response = await axios.get(ENDPOINTS.GET_CONNECTIONS,
+        const response = await devTinderAPI.get(ENDPOINTS.GET_CONNECTIONS,
             {
                 withCredentials: true
             }

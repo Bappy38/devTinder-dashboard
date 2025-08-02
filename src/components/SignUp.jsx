@@ -1,4 +1,4 @@
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ENDPOINTS } from "../constants/endpoints";
@@ -23,7 +23,7 @@ const SignUp = () => {
         e.preventDefault();
 
         try {
-            await axios.post(ENDPOINTS.SIGNUP, 
+            await devTinderAPI.post(ENDPOINTS.SIGNUP, 
             {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
@@ -37,8 +37,6 @@ const SignUp = () => {
             navigate("/login");
         } catch (err) {
             console.error(err);
-            const errorMessage = err.response?.data?.error || "Something went wrong. Please try again.";
-            window.showNotification(crypto.randomUUID(), errorMessage, NOTIFICATION_TYPE.ERROR);
         }
     };
 

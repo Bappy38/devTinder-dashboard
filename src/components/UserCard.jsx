@@ -1,4 +1,4 @@
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { ENDPOINTS } from "../constants/endpoints";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../store/feedSlice";
@@ -9,7 +9,7 @@ const UserCard = ({ user }) => {
 
     const handleAction = async (action) => {
         try {
-            await axios.post(ENDPOINTS.SEND_REQUEST(action, _id), {}, {
+            await devTinderAPI.post(ENDPOINTS.SEND_REQUEST(action, _id), {}, {
                 withCredentials: true,
             });
             dispatch(removeUserFromFeed(user));

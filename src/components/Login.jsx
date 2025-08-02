@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { ENDPOINTS } from "../constants/endpoints";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 
 const Login = () => {
     const [ email, setEmail ] = useState("");
@@ -17,7 +17,7 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const response = await axios.post(ENDPOINTS.LOGIN,
+            const response = await devTinderAPI.post(ENDPOINTS.LOGIN,
             {
                 email,
                 password
