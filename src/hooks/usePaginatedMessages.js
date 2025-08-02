@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { ENDPOINTS } from '../constants/endpoints';
 import { MESSAGE_BATCH_SIZE } from '../constants/constants';
 import axios from 'axios';
+import { NOTIFICATION_TYPE } from '../constants/notificationType';
 
 const usePaginatedMessages = (connectionId, scrollContainerRef) => {
     const [persistedMessages, setPersistedMessages] = useState([]);
@@ -26,6 +27,7 @@ const usePaginatedMessages = (connectionId, scrollContainerRef) => {
             setHasMore(!!nextCursor);
         } catch (err) {
             console.error('Error fetching messages:', err);
+            window.showNotification(crypto.randomUUID(), err.response.data.error, NOTIFICATION_TYPE.ERROR);
         } finally {
             setLoading(false);
         }
