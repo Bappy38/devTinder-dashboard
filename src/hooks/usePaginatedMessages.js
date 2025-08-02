@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { ENDPOINTS } from '../constants/endpoints';
 import { MESSAGE_BATCH_SIZE } from '../constants/constants';
-import axios from 'axios';
 import { NOTIFICATION_TYPE } from '../constants/notificationType';
+import devTinderAPI from '../interceptors/errorHandlingInterceptor';
 
 const usePaginatedMessages = (connectionId, scrollContainerRef) => {
     const [persistedMessages, setPersistedMessages] = useState([]);
@@ -14,7 +14,7 @@ const usePaginatedMessages = (connectionId, scrollContainerRef) => {
         if (loading || (!hasMore && !initial)) return;
         setLoading(true);
         try {
-            const response = await axios.get(ENDPOINTS.GET_MESSAGES(connectionId, MESSAGE_BATCH_SIZE, cursor), {
+            const response = await devTinderAPI.get(ENDPOINTS.GET_MESSAGES(connectionId, MESSAGE_BATCH_SIZE, cursor), {
                 withCredentials: true
             });
             const { messages, nextCursor } = response.data.data;

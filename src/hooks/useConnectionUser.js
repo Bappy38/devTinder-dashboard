@@ -1,7 +1,7 @@
-import axios from "axios"
 import { ENDPOINTS } from "../constants/endpoints"
 import { useEffect, useState } from "react"
 import { HEARTBEAT_INTERVAL_MS } from "../constants/constants";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 
 const useConnectionUser = (connectionId) => {
     const [ connection, setConnection ] = useState(null);
@@ -10,7 +10,7 @@ const useConnectionUser = (connectionId) => {
         const fetchUser = async () => {
 
             try {
-                const response = await axios.get(ENDPOINTS.GET_CONNECTION(connectionId), {
+                const response = await devTinderAPI.get(ENDPOINTS.GET_CONNECTION(connectionId), {
                     withCredentials: true
                 });
                 setConnection(response.data.data);

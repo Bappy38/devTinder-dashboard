@@ -1,4 +1,4 @@
-import axios from 'axios';
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { useState } from 'react';
 import { NOTIFICATION_TYPE } from '../constants/notificationType';
 import { ENDPOINTS } from '../constants/endpoints';
@@ -13,7 +13,7 @@ const EditProfile = ({user}) => {
 
     const handleUpdateProfile = async () => {
       try {
-        const response = await axios.patch(ENDPOINTS.UPDATE_PROFILE,
+        const response = await devTinderAPI.patch(ENDPOINTS.UPDATE_PROFILE,
             {
                 firstName: userData?.firstName,
                 lastName: userData?.lastName,
@@ -31,7 +31,6 @@ const EditProfile = ({user}) => {
         window.showNotification(crypto.randomUUID(), 'Profile Updated Successfully', NOTIFICATION_TYPE.SUCCESS);
       } catch (err) {
         console.error(err);
-        window.showNotification(crypto.randomUUID(), err.response.data.error, NOTIFICATION_TYPE.ERROR);
       }
     }
 

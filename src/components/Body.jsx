@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import NavBar from "./NavBar"
 import { useEffect } from "react";
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { ENDPOINTS } from "../constants/endpoints";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
@@ -18,7 +18,7 @@ const Body = () => {
 
     const fetchUser = async () => {
         try {
-            const response = await axios.get(ENDPOINTS.GET_PROFILE,
+            const response = await devTinderAPI.get(ENDPOINTS.GET_PROFILE,
                 {
                     withCredentials: true
                 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { useEffect } from "react";
 import { ENDPOINTS } from "../constants/endpoints";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,7 @@ const Feed = () => {
 
     const fetchFeed = async () => {
         try {
-            const response = await axios.get(ENDPOINTS.GET_FEED, {
+            const response = await devTinderAPI.get(ENDPOINTS.GET_FEED, {
                 withCredentials: true
             });
             dispatch(addFeed(response.data.data));

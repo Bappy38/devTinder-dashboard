@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ENDPOINTS } from "../constants/endpoints";
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import RequestCard from "./RequestCard";
 
 const Requests = () => {
@@ -12,7 +12,7 @@ const Requests = () => {
     }, []);
 
     const fetchRequests = async() => {
-        const response = await axios.get(ENDPOINTS.GET_REQUESTS,
+        const response = await devTinderAPI.get(ENDPOINTS.GET_REQUESTS,
             {
                 withCredentials: true
             }

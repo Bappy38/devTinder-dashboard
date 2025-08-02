@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { calculateAge } from "../helpers/dateTimeHelper";
-import axios from "axios";
+import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { ENDPOINTS } from "../constants/endpoints";
 import {NOTIFICATION_TYPE} from "../constants/notificationType";
 
@@ -12,7 +12,7 @@ const RequestCard = ({ user, requestId }) => {
 
     const handleAction = async (action) => {
         try {
-            await axios.post(ENDPOINTS.REVIEW_REQUEST(action, requestId), {}, {
+            await devTinderAPI.post(ENDPOINTS.REVIEW_REQUEST(action, requestId), {}, {
                 withCredentials: true
             });
             window.showNotification(crypto.randomUUID(), `Connection request ${action}`, NOTIFICATION_TYPE.SUCCESS);
