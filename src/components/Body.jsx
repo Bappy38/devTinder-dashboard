@@ -1,11 +1,11 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import NavBar from "./NavBar"
 import { useEffect } from "react";
-import devTinderAPI from "../interceptors/errorHandlingInterceptor";
 import { ENDPOINTS } from "../constants/endpoints";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
 import useHeartbeat from "../hooks/useHeartbeat";
+import axios from "axios";
 
 const Body = () => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Body = () => {
 
     const fetchUser = async () => {
         try {
-            const response = await devTinderAPI.get(ENDPOINTS.GET_PROFILE,
+            const response = await axios.get(ENDPOINTS.GET_PROFILE,
                 {
                     withCredentials: true
                 }
