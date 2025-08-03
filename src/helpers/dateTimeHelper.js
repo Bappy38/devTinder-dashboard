@@ -1,3 +1,5 @@
+import { HEARTBEAT_INTERVAL_MS } from "../constants/constants";
+
 export function formatDateForInput(dateString) {
     if (!dateString) return '';
     return dateString.substring(0, 10);  
@@ -21,7 +23,9 @@ export function timeAgo(dateString) {
     const now = new Date();
     const diffSec = Math.floor((now - date) / 1000);
 
-    if (diffSec < 60) return 'Online 🟢';
+    const statusCheckThreshold = (3 * HEARTBEAT_INTERVAL_MS) / 1000;
+
+    if (diffSec < statusCheckThreshold) return 'Online 🟢';
     if (diffSec < 3600) return `${Math.floor(diffSec / 60)} min ago`;
     if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hr ago`;
 
