@@ -15,6 +15,7 @@ export const createSocketConnection = () => {
     return io(API_BASE_URL, {
         autoConnect: true,
         withCredentials: true,
-        path: '/api/socket.io'
+        path: '/socket.io'
+        // path: '/api/socket.io'
     });
 }
